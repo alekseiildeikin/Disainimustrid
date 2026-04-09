@@ -1,0 +1,35 @@
+class Diary():
+    def __init__(self):
+        self.logs = []
+        self.counter = 0
+    def add_entry(self, text):
+        self.counter += 1
+        self.logs.append(f"{self.counter}: {text}")
+    def remove_entry(self, index):
+        if 0 <= index < len(self.logs):
+            del self.logs[index]
+            self.counter -= 1
+        else:
+            print("Invalid index")
+    def __str__(self):
+        return "\n".join(self.logs)
+
+class DiaryPersistence():
+    @staticmethod
+    def save_to_file(diary, filename):
+        with open(filename, 'w') as f:
+            for entry in diary.logs:
+                f.write(entry + '\n')
+    @staticmethod
+    def load_from_file(filename):
+        diary = Diary()
+        with open(filename, 'r') as f:
+            diary.logs = f.read().splitlines()
+            diary.counter = len(diary.logs)
+        return diary
+
+class DiaryStatistics():
+    @staticmethod
+    def print_statistics(diary):
+        print(f"Total logs: {diary.counter}")
+        print(f"Average log length: {sum(len(log) for log in diary.logs) / diary.counter if diary.counter > 0 else 0}")
