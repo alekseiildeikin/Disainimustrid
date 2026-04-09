@@ -1,0 +1,54 @@
+from enum import Enum
+
+
+class Product():
+    def __init__(self, name, color, size):
+        self.name = name
+        self.color = color
+        self.size = size
+
+class Color(Enum):
+    RED = 1
+    GREEN = 2
+    BLUE = 3
+
+class Size(Enum):
+    SMALL = 1
+    MEDIUM = 2
+    LARGE = 3
+
+class ColorSpecification():
+    def __init__(self, color):
+        self.color = color
+
+    def is_satisfied(self, item):
+        return item.color == self.color
+    
+    def __and__(self, other):
+        return AndSpecification(self, other)
+
+class SizeSpecification():
+    def __init__(self, size):
+        self.size = size
+
+    def is_satisfied(self, item):
+        return item.size == self.size
+    
+    def __and__(self, other):
+        return AndSpecification(self, other)
+    
+class AndSpecification():
+    def __init__(self, *args):
+        self.args = args
+
+    def is_satisfied(self, item):
+        return all(map(lambda spec: spec.is_satisfied(item), self.args))
+    
+    def __and__(self, other):
+        return AndSpecification(*self.args, other)
+    
+class BetterFilter():
+    def filter(self, items, spec):
+        for item in items:
+            if spec.is_satisfied(item):
+                yield item
