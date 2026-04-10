@@ -1,0 +1,30 @@
+from abc import ABC, abstractmethod
+
+
+class Person():
+    def __init__(self, name):
+        self.name = name
+    
+class RelationshipBrowser(ABC):
+    @abstractmethod
+    def find_all_children_of(self, name):
+        pass
+
+class Relationships(RelationshipBrowser):
+    def __init__(self):
+        self.relations = []
+    
+    def add_parent_and_child(self, parent, child):
+        self.relations.append((parent, 'parent', child))
+        self.relations.append((child, 'child', parent))
+    
+    def find_all_children_of(self, name):
+        for r in self.relations:
+            if r[0].name == name and r[1] == 'parent':
+                yield r[2].name
+
+class Research:
+
+    def __init__(self, browser: RelationshipBrowser):
+        for child in browser.find_all_children_of("John"):
+            print(f"John has a child called {child}")
