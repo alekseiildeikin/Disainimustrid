@@ -1,0 +1,41 @@
+from abc import ABC, abstractmethod
+
+class Printer(ABC):
+    @abstractmethod
+    def print(self, document):
+        pass
+
+class Scanner(ABC):
+    @abstractmethod
+    def scan(self, document):
+        pass
+
+class Fax(ABC):
+    @abstractmethod
+    def fax(self, document):
+        pass
+
+class MultiFunctionPrinter(Printer, Scanner, Fax):
+    def print(self, document):
+        print(f"Printing: {document}")
+
+    def scan(self, document):
+        print(f"Scanning: {document}")
+
+    def fax(self, document):
+        print(f"Faxing: {document}")
+
+class OldFashionedPrinter(Printer):
+    def print(self, document):
+        print(f"Printing: {document}")
+
+class MultiFunctionMachine:
+    def __init__(self, printer: Printer, scanner: Scanner):
+        self.printer = printer
+        self.scanner = scanner
+
+    def print(self, document):
+        self.printer.print(document)
+
+    def scan(self, document):
+        self.scanner.scan(document)
