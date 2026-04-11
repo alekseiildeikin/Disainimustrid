@@ -1,0 +1,59 @@
+import random
+
+
+
+class Generator:
+    def generate(self, n):
+        return [random.randint(1, 9) for _ in range(n)]
+
+
+
+class Splitter:
+    def split(self, matrix):
+        result = []
+
+        size = len(matrix)
+
+        for row in matrix:
+            result.append(row)
+
+        for col in range(size):
+            column = [matrix[row][col] for row in range(size)]
+            result.append(column)
+
+        main_diag = [matrix[i][i] for i in range(size)]
+        result.append(main_diag)
+
+        second_diag = [matrix[i][size - i - 1] for i in range(size)]
+        result.append(second_diag)
+
+        return result
+
+
+
+class Verifier:
+    def verify(self, lists):
+        sums = [sum(lst) for lst in lists]
+        return all(s == sums[0] for s in sums)
+
+
+
+class MagicSquareGenerator:
+    def __init__(self):
+        self.generator = Generator()
+        self.splitter = Splitter()
+        self.verifier = Verifier()
+
+    def generate(self, size):
+        while True:
+            nums = self.generator.generate(size * size)
+
+            matrix = [
+                nums[i * size:(i + 1) * size]
+                for i in range(size)
+            ]
+
+            parts = self.splitter.split(matrix)
+
+            if self.verifier.verify(parts):
+                return matrix
