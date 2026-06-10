@@ -1,0 +1,27 @@
+ANALÜÜSIÜLESANNE – STATE
+
+1. Olekute mõistmine Minu süsteemis eksisteerivad olekud LOCKED, OPEN ja ERROR. Need on koodis esindatud stringidena, mis on salvestatud muutuja self.status alla. Valisin selle lahenduse, sest see on lihtne, hästi loetav ja välistab vajaduse keeruliste numbriliste koodide jälgimiseks.
+
+2. Käitumine sõltuvalt olekust Programmi käitumine muutub vastavalt status väärtusele, sest meetodid kontrollivad enne tegevuse sooritamist hetkeolekut. Näiteks kui lukk on olekus OPEN, siis uute numbrite sisestamine ei muuda luku sisu, kuid olekus LOCKED lisatakse iga sisestus proovitavasse koodi.
+
+3. Üleminekud Üleminek LOCKED -> sisestus toimub siis, kui kasutaja vajutab esimest koodi numbrit. Üleminek sisestus OPEN toimub hetkel, kui sisestatud numbrite jada ühtib täpselt määratud salakoodiga. Üleminek sisestus -> ERROR toimub siis, kui sisestatud kood on vale või selle pikkus täitub ilma õige vastuseta. Loogika seisneb selles, et süsteem kontrollib sisendit reaalajas ja reageerib vastavalt reeglitele.
+
+4. Miks see on State muster? Kasutasin if/elif lahendust. See on State mõtteviis, kuna objekti meetodite tulemus ja lubatud tegevused ei ole fikseeritud, vaid sõltuvad otseselt objekti sisemisest seisundist. Me ei küsi lihtsalt, mis nupule vajutati, vaid kas praegune olek lubab sellele nupule reageerida.
+
+5. Probleem ilma State lähenemiseta Ilma state loogikata näeks lahendus välja nagu suur hulk sõltumatuid jah/ei muutujaid. Keerulisemaks läheks tingimuslausete haldamine, sest iga tegevuse juures peaks kontrollima paljusid erinevaid lippe korraga, mis muudaks koodi vigadele vastuvõtlikuks.
+
+6. Laiendamine Uue oleku LOCKED_OUT lisamiseks peaksin täiendama olekute nimekirja ja lisama ebaõnnestunud katsete loenduri. See oleks lihtne, sest uus loogika lisanduks eraldiseisva haruna ja ei segaks olemasolevaid üleminekuid.
+
+ANALÜÜSIÜLESANNE – STRATEGY
+
+1. Mis on muutuv osa? Muutuv osa on diskriminandi arvutamise loogika ja selle tulemuse tõlgendamine. See eraldati Strategy klassi, et solver saaks töötada erinevate matemaatiliste reeglitega ilma oma põhiloogikat muutmata.
+
+2. Strategy roll DiscriminantStrategy on alusklass, mis määrab kohustusliku meetodi diskriminandi leidmiseks. See on eraldi klass, mitte funktsioon, sest see võimaldab luua selge tüübisüsteemi ja vajadusel lisada strateegiale täiendavaid parameetreid või meetodeid.
+
+3. Kahe strateegia võrdlus OrdinaryDiscriminantStrategy arvutab diskriminandi tavalise valemi järgi ja tagastab tulemuse igal juhul. RealDiscriminantStrategy aga sekkub siis, kui tulemus on negatiivne, andes märku, et reaalarvulised lahendid puuduvad. Logiline erinevus on selles, kuidas strateegia käsitleb matemaatilisi piiranguid.
+
+4. Kuidas solver kasutab strateegiat? Solver hoiab endas strateegia objekti ja kutsub selle meetodit välja arvutamise etapis. Näiteks d = self.strategy.calculate_discriminant. Solver ise ei tea arvutuskäiku, ta küsib vaid vastust väliselt strateegialt.
+
+5. Miks see on parem kui if/else? Strateegia kasutamine on parem, sest see järgib Open/Closed printsiipi. Uute lahendusviiside lisamiseks ei pea me muudma solveri koodi, vaid saame lihtsalt luua uue strateegia klassi ja see solverile ette anda.
+
+6. Laiendamine Uue strateegia lisamiseks tuleb kirjutada vaid üks uus klass. Solverit ennast muuta ei ole vaja, kuna ta oskab suhelda kõigi objektidega, mis järgivad strateegia liidest. See muudab süsteemi väga paindlikuks.
